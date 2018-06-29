@@ -1,0 +1,15 @@
+:root {
+  --bRadius: 3px;
+  --bColor: #ddd;
+  --hoverColor: rgb(247, 247, 247);
+  --dropdownIndex: 2;
+  --searchInputIndex: 1;
+}
+
+.App {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}

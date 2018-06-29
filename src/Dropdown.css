@@ -1,0 +1,55 @@
+.Dropdown {
+  position: relative;
+  width: 350px;
+  box-sizing: border-box;
+  border: 1px solid var(--bColor);
+  border-radius: var(--bRadius);
+  padding: 10px 20px 10px 10px;
+  z-index: var(--dropdownIndex);
+}
+
+.Dropdown-caret {
+  position: absolute;
+  right: 5px;
+}
+
+.Dropdown-caret:hover {
+  cursor: pointer;
+}
+
+.Dropdown-countries {
+  position: absolute;
+  top: 35px;
+  left: -1px;
+  width: 350px;
+  box-sizing: border-box;
+  border: 1px solid var(--bColor);
+  border-radius: var(--bRadius);
+  max-height: 300px;
+  overflow: scroll;
+  user-select: none;
+}
+
+.Dropdown-countries:focus {
+  outline: none;
+}
+
+.Dropdown-country:hover {
+  background-color: var(--hoverColor);
+  cursor: pointer;
+}
+
+.Dropdown-country:focus {
+  background-color: var(--hoverColor);
+  outline: none;
+}
+
+.Dropdown-country {
+  padding: 7px 10px;
+  background-color: #fff;
+  border-bottom: 1px solid var(--bColor);
+}
+
+.Dropdown-country:last-child {
+  border-bottom: 0;
+}
