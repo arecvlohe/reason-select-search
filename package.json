@@ -1,5 +1,6 @@
 {
-  "name": "ahrefs-test",
+  "name": "reason-select-search",
+  "homepage": "http://arecvlohe.github.io/reason-select-search",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
