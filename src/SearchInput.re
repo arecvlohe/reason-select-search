@@ -1,13 +1,10 @@
 [%bs.raw {|require('./SearchInput.css')|}];
 
-type retainedProps= {
-  country: Countries.country
-}
+type retainedProps = {country: Models.country};
 
 type state = {
-  countries: Countries.countries,
   input: string,
-  results: Countries.countries,
+  results: Models.countries,
   inputRef: ref(option(Dom.element))
 };
 
@@ -20,44 +17,42 @@ type action =
 
 let component = ReasonReact.reducerComponentWithRetainedProps("SearchInput");
 
-let make = (~handleResults, ~country, _children) => {
+let make = (~handleResults, ~country, ~countries, _children) => {
   ...component,
   retainedProps: {
-    country: country
+    country: country,
   },
   initialState: () => {
-    countries: Countries.countriesArray,
     input: "",
     results: [||],
     inputRef: ref(None)
   },
   didMount: self => {
-
-    Webapi.Dom.document |> Webapi.Dom.Document.addKeyUpEventListener(event => {
-      let code = Webapi.Dom.KeyboardEvent.code(event);
-      switch (code) {
-      | "KeyS" => {
-        switch self.state.inputRef^ {
-        | None => ()
-        | Some(r) => ReactDOMRe.domElementToObj(r)##focus()
-        };
-      }
-      | _ => ()
-      }
-    });
-
+    Webapi.Dom.document
+    |> Webapi.Dom.Document.addKeyUpEventListener(event => {
+         let code = Webapi.Dom.KeyboardEvent.code(event);
+         switch code {
+         | "KeyS" =>
+           switch self.state.inputRef^ {
+           | None => ()
+           | Some(r) => ReactDOMRe.domElementToObj(r)##focus()
+           }
+         | _ => ()
+         };
+       });
   },
   didUpdate: ({oldSelf, newSelf}) => {
-    if (oldSelf.retainedProps.country.value !== newSelf.retainedProps.country.value) {
+    if (oldSelf.retainedProps.country.value
+        !== newSelf.retainedProps.country.value) {
       newSelf.send(UpdateInput(""));
     }
   },
-  reducer: (action: action, state: state) =>
+  reducer: (action: action, state: state) => {
     switch action {
     | UpdateInput(input) =>
       let results =
-        state.countries
-        |> Js.Array.filter((country: Countries.country) =>
+        countries
+        |> Js.Array.filter((country: Models.country) =>
              Js.String.startsWith(
                input |> Js.String.toLowerCase,
                country.label |> Js.String.toLowerCase
@@ -68,7 +63,8 @@ let make = (~handleResults, ~country, _children) => {
         (_self => handleResults(results))
       );
     | NoOp => ReasonReact.NoUpdate
-    },
+    }
+  },
   render: self =>
     <div className="SearchInput">
       <span className="SearchInput-icon">
@@ -116,8 +112,8 @@ let make = (~handleResults, ~country, _children) => {
               (
                 ReasonReact.array(
                   self.state.results
-                  |> Array.mapi((index, country: Countries.country) => {
-                       let {label, value}: Countries.country = country;
+                  |> Array.mapi((index, country: Models.country) => {
+                       let {label, value}: Models.country = country;
                        <div
                          key=country.value
                          id=country.value

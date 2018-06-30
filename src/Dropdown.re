@@ -1,8 +1,9 @@
 [%bs.raw {|require('./Dropdown.css')|}];
 
+type retainedProps = {countries: Models.countries};
+
 type state = {
-  countries: Countries.countries,
-  country: Countries.country,
+  country: Models.country,
   isOpen: bool,
   focusTabIndex: int,
   divRef: ref(option(Dom.element))
@@ -13,7 +14,7 @@ let setDivRef = (theRef, {ReasonReact.state}) =>
 
 type action =
   | ToggleDropdown
-  | SelectCountry(Countries.country)
+  | SelectCountry(Models.country)
   | FocusNextTabIndex
   | FocusPrevTabIndex
   | SelectCurrentTabIndex
@@ -21,12 +22,12 @@ type action =
   | OpenDropdown
   | NoOp;
 
-let component = ReasonReact.reducerComponent("Dropdown");
+let component = ReasonReact.reducerComponentWithRetainedProps("Dropdown");
 
-let make = (~initialCountryValue, ~handleChange, ~results, _children) => {
+let make =
+    (~initialCountryValue, ~countries, ~handleChange, ~results, _children) => {
   ...component,
   initialState: () => {
-    countries: Countries.countriesArray,
     country: {
       label: "",
       value: ""
@@ -35,6 +36,7 @@ let make = (~initialCountryValue, ~handleChange, ~results, _children) => {
     focusTabIndex: (-1),
     divRef: ref(None)
   },
+  retainedProps: {countries: countries},
   didMount: self => {
     Webapi.Dom.document
     |> Webapi.Dom.Document.addKeyDownEventListener(event => {
@@ -50,15 +52,21 @@ let make = (~initialCountryValue, ~handleChange, ~results, _children) => {
          | _ => ()
          };
        });
-    let country =
-      self.state.countries
-      |> Js.Array.find((country: Countries.country) =>
-           country.value === initialCountryValue
-         );
-    switch country {
-    | None => ()
-    | Some(country) => self.send(SelectCountry(country))
-    };
+  },
+  didUpdate: ({ oldSelf, newSelf }) => {
+    let prevLength = oldSelf.retainedProps.countries |> Array.length;
+    let nextLength = newSelf.retainedProps.countries |> Array.length;
+    if (prevLength !== nextLength) {
+      let country =
+      newSelf.retainedProps.countries
+      |> Js.Array.find((country: Models.country) => country.value === initialCountryValue);
+      switch country {
+      | None => ()
+      | Some(country) => newSelf.send(SelectCountry(country))
+      };
+    } else {
+      ();
+    }
   },
   reducer: (action: action, state: state) =>
     switch action {
@@ -114,7 +122,7 @@ let make = (~initialCountryValue, ~handleChange, ~results, _children) => {
     | FocusNextTabIndex => ReasonReact.NoUpdate
     | FocusPrevTabIndex => ReasonReact.NoUpdate
     | SelectCurrentTabIndex =>
-      let selectedCountry: Countries.country =
+      let selectedCountry: Models.country =
         switch state.divRef^ {
         | None => {label: "", value: ""}
         | Some(r) =>
@@ -170,7 +178,7 @@ let make = (~initialCountryValue, ~handleChange, ~results, _children) => {
             (
               ReasonReact.array(
                 Array.mapi(
-                  (index, country: Countries.country) =>
+                  (index, country: Models.country) =>
                     <div
                       key=country.value
                       id=country.value
@@ -179,7 +187,7 @@ let make = (~initialCountryValue, ~handleChange, ~results, _children) => {
                       tabIndex=index>
                       (Utils.text(country.label))
                     </div>,
-                  Array.length(results) < 1 ? self.state.countries : results
+                  Array.length(results) < 1 ? countries : results
                 )
               )
             )

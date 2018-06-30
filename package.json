@@ -5,6 +5,8 @@
   "private": true,
   "dependencies": {
     "@glennsl/bs-json": "^2.0.0",
+    "bs-fetch": "^0.3.0",
+    "bs-json": "^1.0.1",
     "bs-webapi": "^0.10.0",
     "flag-icon-css": "^3.0.0",
     "react": "^16.4.1",
