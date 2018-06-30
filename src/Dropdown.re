@@ -36,22 +36,20 @@ let make = (~initialCountryValue, ~handleChange, ~results, _children) => {
     divRef: ref(None)
   },
   didMount: self => {
-
-    Webapi.Dom.document |> Webapi.Dom.Document.addKeyDownEventListener(event => {
-      let code = Webapi.Dom.KeyboardEvent.code(event);
-      switch (code) {
-      | "KeyO" => {
-        self.send(OpenDropdown);
-        switch self.state.divRef^ {
-        | None => ()
-        | Some(r) => ReactDOMRe.domElementToObj(r)##focus()
-        };
-      }
-      | "KeyC" => self.send(CloseDropdown);
-      | _ => ()
-      }
-    });
-
+    Webapi.Dom.document
+    |> Webapi.Dom.Document.addKeyDownEventListener(event => {
+         let code = Webapi.Dom.KeyboardEvent.code(event);
+         switch code {
+         | "BracketLeft" =>
+           self.send(OpenDropdown);
+           switch self.state.divRef^ {
+           | None => ()
+           | Some(r) => ReactDOMRe.domElementToObj(r)##focus()
+           };
+         | "BracketRight" => self.send(CloseDropdown)
+         | _ => ()
+         };
+       });
     let country =
       self.state.countries
       |> Js.Array.find((country: Countries.country) =>
@@ -78,7 +76,7 @@ let make = (~initialCountryValue, ~handleChange, ~results, _children) => {
     | SelectCountry(country) =>
       ReasonReact.UpdateWithSideEffects(
         {...state, country, isOpen: false, focusTabIndex: (-1)},
-        (_self => handleChange(country) )
+        (_self => handleChange(country))
       )
     | FocusNextTabIndex when state.focusTabIndex < Array.length(results) - 1 =>
       ReasonReact.UpdateWithSideEffects(
@@ -133,7 +131,7 @@ let make = (~initialCountryValue, ~handleChange, ~results, _children) => {
         },
         (_self => handleChange(selectedCountry))
       );
-    | OpenDropdown => ReasonReact.Update({ ...state, isOpen: true })
+    | OpenDropdown => ReasonReact.Update({...state, isOpen: true})
     | CloseDropdown => ReasonReact.Update({...state, isOpen: false})
     | NoOp => ReasonReact.NoUpdate
     },

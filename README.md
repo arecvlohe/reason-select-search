@@ -10,8 +10,8 @@ Here is a list of the keyboard shortcuts:
 
 | Key        | Action                                          |
 | ---------- | ----------------------------------------------- |
-| o          | Open dropdown                                   |
-| c          | Close dropdown                                  |
+| [          | Open dropdown                                   |
+| ]          | Close dropdown                                  |
 | s          | Focus search bar                                |
 | down arrow | Navigate dropdown list going down               |
 | up arrow   | Navigate dropdown list going up                 |
