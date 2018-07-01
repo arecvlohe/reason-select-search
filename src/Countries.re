@@ -1,11 +1,12 @@
+/* Used static data this to start the project */
 type country = {
   label: string,
-  value: string,
-}
+  value: string
+};
 
 type countries = array(country);
 
-let alandIsland = {js|Åland Islands|js}
+let alandIsland = {js|Åland Islands|js};
 
 let countriesArray: countries = [|
   {label: "Afghanistan", value: "af"},

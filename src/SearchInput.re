@@ -70,8 +70,12 @@ let make = (~handleResults, ~country, ~countries, _children) => {
       <span className="SearchInput-icon">
         <i className="fas fa-search" />
       </span>
+      <span onClick={_event => self.send(UpdateInput(""))} className="SearchInput-clear">
+        <i className="fas fa-times"></i>
+      </span>
       <input
         ref=(self.handle(setInputRef))
+        className="SearchInput-input"
         style=(
           String.length(self.state.input) > 0
           && Array.length(self.state.results) > 0 ?
@@ -82,7 +86,6 @@ let make = (~handleResults, ~country, ~countries, _children) => {
             ) :
             ReactDOMRe.Style.make()
         )
-        className="SearchInput-input"
         value=self.state.input
         placeholder="Search"
         onChange=(

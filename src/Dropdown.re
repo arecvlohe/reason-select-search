@@ -36,8 +36,10 @@ let make =
     focusTabIndex: (-1),
     divRef: ref(None)
   },
-  retainedProps: {countries: countries},
-  didMount: self => {
+  retainedProps: {
+    countries: countries
+  },
+  didMount: self =>
     Webapi.Dom.document
     |> Webapi.Dom.Document.addKeyDownEventListener(event => {
          let code = Webapi.Dom.KeyboardEvent.code(event);
@@ -51,22 +53,23 @@ let make =
          | "BracketRight" => self.send(CloseDropdown)
          | _ => ()
          };
-       });
-  },
-  didUpdate: ({ oldSelf, newSelf }) => {
+       }),
+  didUpdate: ({oldSelf, newSelf}) => {
     let prevLength = oldSelf.retainedProps.countries |> Array.length;
     let nextLength = newSelf.retainedProps.countries |> Array.length;
     if (prevLength !== nextLength) {
       let country =
-      newSelf.retainedProps.countries
-      |> Js.Array.find((country: Models.country) => country.value === initialCountryValue);
+        newSelf.retainedProps.countries
+        |> Js.Array.find((country: Models.country) =>
+             country.value === initialCountryValue
+           );
       switch country {
       | None => ()
       | Some(country) => newSelf.send(SelectCountry(country))
       };
     } else {
       ();
-    }
+    };
   },
   reducer: (action: action, state: state) =>
     switch action {

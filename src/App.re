@@ -8,6 +8,6 @@ let make = (_children) => {
   ...component,
   render: _self =>
     <div className="App">
-      <CountrySelect className="" country="us" onChange=(country => Js.log(country)) />
+      <CountrySelect className="custom-class" country="us" onChange=(country => Js.log(country)) />
     </div>,
 };

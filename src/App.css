@@ -13,3 +13,7 @@
   align-items: center;
   flex-direction: column;
 }
+
+.custom-class {
+  background-color: #fff;
+}
